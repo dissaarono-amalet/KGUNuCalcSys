@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this software in your research, please cite it using the metadata below."
+
+title: "Nutrition Barcode Application"
+
+type: software
+
+authors:
+  - family-names: "Yura"
+    given-names: "Makoto"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+    affiliation: "Kanazawa-Gakuin Junior Colledge"
+
+version: "1.0.0"
+
+date-released: "2026-08-17"
+
+doi: "10.5281/zenodo.XXXXXXXX"
+
+repository-code: "https://github.com/makotoyura/NutritionCalcBarcode-app"
+
+license: MIT
