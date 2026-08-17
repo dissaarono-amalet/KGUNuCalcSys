@@ -1,5 +1,5 @@
 # MIT License 日本語参考訳
-Copyright (c) 2026 Makoto Yura
+Copyright (c) 2026 Yura Makoto
 > **注意**
 >
 > この文書は、MIT Licenseの内容を日本語利用者が理解しやすくすることを目的として作成した参考訳です。
