@@ -40,8 +40,12 @@ https://doi.org/10.5281/zenodo.XXXXXXXX
 
 ## License
 このソフトウェアはMITライセンスの元で公開されています
+
 詳しくは LICENSE.ja.md/LICENSE ファイルをご確認ください
+
+
 This software is released under the MIT License.
+
 See the LICENSE file for details.
 
 
