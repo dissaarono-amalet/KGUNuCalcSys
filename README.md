@@ -28,26 +28,24 @@
 - 日本人の栄養摂取基準2025を100%として、読み取ったバーコードの合計を数値および棒グラフで表示
 
 ## Citation
-
 本ソフトウェアを研究、教育または学会発表等で利用した場合は、
 以下の文献またはソフトウェアを引用してください。
 
 日本栄養学教育学会雑誌第11巻
-
-R-1:可搬性および体感性に優れた栄養教育向けICTソリューションの開発
-
+O-1:可搬性および体感性に優れた栄養教育向けICTソリューションの開発
 ◯由良亮*, 山本有希*, 桶家亜実*, 河井ますみ*, 大道文香*, 京極奈美*, 佐藤香菜子*, 平山雄大*, 安藤秀子*
 
 [Computer software]. Zenodo.
 https://doi.org/10.5281/zenodo.XXXXXXXX
 
 ## License
-
+このソフトウェアはMITライセンスの元で公開されています
+詳しくは LICENSE.ja.md/LICENSE ファイルをご確認ください
 This software is released under the MIT License.
 See the LICENSE file for details.
 
-## Author
 
+## Author
 Makoto Yura  
 [Kanazawa Gakuin Junior Colledge]
 
