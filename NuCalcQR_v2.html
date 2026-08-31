@@ -1,0 +1,1319 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>NuCalc QR版</title>
+<style>
+  :root{
+    --bg: #f5f7fb;
+    --panel: rgba(255,255,255,0.96);
+    --line: #d8dde8;
+    --text: #1d2433;
+    --muted: #5a657a;
+    --ok: #0a8f5a;
+    --ng: #c62828;
+    --accent: #2563eb;
+
+    --e: #0000FF;
+    --c: #00BFFF;
+    --p: #006400;
+    --f: #DAA520;
+    --s: #FF6347;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    color: var(--text);
+    background: var(--bg);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  body {
+    padding: 14px;
+  }
+
+  .app {
+    max-width: 1120px;
+    margin: 0 auto;
+    background: var(--panel);
+    border: 1px solid rgba(0,0,0,.06);
+    border-radius: 18px;
+    box-shadow: 0 10px 28px rgba(0,0,0,.08);
+    overflow: hidden;
+  }
+
+  .header {
+    padding: 16px 16px 8px;
+    border-bottom: 1px solid rgba(0,0,0,.06);
+  }
+
+  .header h1 {
+    margin: 0 0 8px;
+    font-size: 1.15rem;
+    line-height: 1.4;
+  }
+
+  .header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: .92rem;
+    line-height: 1.6;
+  }
+
+  .section {
+    padding: 14px 16px;
+  }
+
+  .topbar {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    align-items: end;
+  }
+
+  .field label {
+    display: block;
+    font-size: .88rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  select, .btn, .scan-input, .manual-text {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fff;
+    font-size: 1rem;
+  }
+
+  select {
+    width: 100%;
+    padding: 10px 12px;
+  }
+
+  .refhint {
+    padding: 10px 12px;
+    min-height: 44px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fafbff;
+    font-size: .92rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: #fff;
+  }
+
+  table.grid {
+    width: 100%;
+    min-width: 880px;
+    border-collapse: collapse;
+  }
+
+  .grid th, .grid td {
+    border-bottom: 1px solid #e8edf5;
+    padding: 8px;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .grid thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #f8faff;
+    font-weight: 700;
+    letter-spacing: .02em;
+  }
+
+  .grid th.colE, .grid td.colE { background: rgba(0, 0, 255, .07); }
+  .grid th.colC, .grid td.colC { background: rgba(0, 191, 255, .08); }
+  .grid th.colP, .grid td.colP { background: rgba(0, 100, 0, .08); }
+  .grid th.colF, .grid td.colF { background: rgba(218, 160, 32, .10); }
+  .grid th.colS, .grid td.colS { background: rgba(255, 99, 71, .10); }
+  .grid th.colT, .grid td.colT { background: rgba(0,0,0,.04); }
+
+  .grid th.colE { color: var(--e); }
+  .grid th.colC { color: var(--c); }
+  .grid th.colP { color: var(--p); }
+  .grid th.colF { color: var(--f); }
+  .grid th.colS { color: var(--s); }
+
+  .scan-input {
+    width: 100%;
+    padding: 10px 10px;
+    text-align: right;
+    font-weight: 700;
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .scan-input.meta {
+    text-align: left;
+    font-weight: 600;
+    font-size: .92rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .scan-input::placeholder {
+    color: #8a94a8;
+    font-weight: 500;
+  }
+
+  .row-actions .btn {
+    width: 100%;
+  }
+
+  .buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .btn {
+    padding: 10px 14px;
+    cursor: pointer;
+  }
+
+  .btn.primary {
+    background: #eaf2ff;
+    border-color: #bfd2ff;
+    color: #0d47a1;
+    font-weight: 700;
+  }
+
+  .btn.danger {
+    background: #fff4f4;
+    border-color: #ffd4d4;
+    color: #b42318;
+  }
+
+  .note {
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: .9rem;
+    line-height: 1.65;
+  }
+
+  .note code {
+    background: rgba(0,0,0,.05);
+    border-radius: 6px;
+    padding: 1px 5px;
+  }
+
+  .status {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: #f6f8fc;
+    font-size: .92rem;
+    line-height: 1.5;
+    border: 1px solid #e3e8f1;
+  }
+
+  .status.ok {
+    color: var(--ok);
+    background: #effaf5;
+    border-color: #cdeedd;
+  }
+
+  .status.ng {
+    color: var(--ng);
+    background: #fff3f3;
+    border-color: #ffd4d4;
+    font-weight: 700;
+  }
+
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    background: rgba(10,16,30,.54);
+    z-index: 3000;
+  }
+
+  .modal-backdrop.show {
+    display: flex;
+  }
+
+  .modal {
+    width: min(940px, 96vw);
+    max-height: 92vh;
+    overflow: auto;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 24px 60px rgba(0,0,0,.28);
+  }
+
+  .modal header {
+    padding: 14px 16px;
+    border-bottom: 1px solid #e7ebf3;
+    font-weight: 800;
+  }
+
+  .modal .content {
+    padding: 14px 16px 12px;
+  }
+
+  .modal footer {
+    padding: 12px 16px 16px;
+    border-top: 1px solid #e7ebf3;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .modal-sub {
+    margin-bottom: 8px;
+    color: var(--muted);
+    font-size: .92rem;
+    line-height: 1.5;
+  }
+
+  #qrVideo {
+    width: 100%;
+    max-height: 56vh;
+    background: #111;
+    border-radius: 14px;
+    display: block;
+  }
+
+  .qr-panel {
+    display: grid;
+    gap: 12px;
+  }
+
+  .manual-area {
+    border: 1px dashed #c9d4e6;
+    border-radius: 14px;
+    background: #fafcff;
+    padding: 12px;
+  }
+
+  .manual-area h3 {
+    margin: 0 0 8px;
+    font-size: .98rem;
+  }
+
+  .manual-text {
+    width: 100%;
+    min-height: 88px;
+    padding: 10px 12px;
+    resize: vertical;
+  }
+
+  #sumList {
+    margin: 10px 0 0;
+    padding-left: 18px;
+  }
+
+  #sumList li {
+    margin: 6px 0;
+    font-weight: 700;
+  }
+
+  .license {
+    padding: 0 16px 18px;
+    color: var(--muted);
+    font-size: .84rem;
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  @media (max-width: 720px) {
+    body { padding: 10px; }
+    .topbar { grid-template-columns: 1fr 1fr; }
+    .header h1 { font-size: 1.04rem; }
+    .btn { width: 100%; }
+    .modal footer { justify-content: stretch; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <h1>NuCalc QR版</h1>
+    <p>
+      入力欄をタップしてQRコードを読み取ってください。<br>
+      Nタグは平文、Aタグ・DタグはHEX形式です。
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="topbar">
+      <div class="field">
+        <label for="sexSel">性別</label>
+        <select id="sexSel">
+          <option value="male">男性</option>
+          <option value="female" selected>女性</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="ageSel">年齢層</label>
+        <select id="ageSel">
+          <option value="A0607">6〜7歳</option>
+          <option value="A0809">8〜9歳</option>
+          <option value="A1011">10〜11歳</option>
+          <option value="A1214">12〜14歳</option>
+          <option value="A1517">15〜17歳</option>
+          <option value="A1829" selected>18〜29歳</option>
+          <option value="A3049">30〜49歳</option>
+          <option value="A5069">50〜69歳</option>
+          <option value="A6574">65〜74歳</option>
+          <option value="A7500">75歳以上</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="actSel">活動</label>
+        <select id="actSel">
+          <option value="lv1">Lv1</option>
+          <option value="lv2" selected>Lv2</option>
+          <option value="lv3">Lv3</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>基準</label>
+        <div class="refhint" id="refHint">基準：—</div>
+      </div>
+    </div>
+
+    <div class="table-wrap" style="margin-top:14px;">
+      <table class="grid" aria-label="栄養入力表">
+        <thead>
+          <tr>
+            <th class="colE">エネルギー</th>
+            <th class="colC">炭水化物</th>
+            <th class="colP">タンパク質</th>
+            <th class="colF">脂質</th>
+            <th class="colS">塩分</th>
+            <th class="colT" id="openDTagHelp" style="cursor:pointer;">食器/盛り</th>
+            <th>行操作</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="buttons">
+      <button id="sumColumns" class="btn primary">合計を表示</button>
+      <button id="clearAll" class="btn danger">全てクリア</button>
+    </div>
+
+    <div class="note">
+      <div>・入力欄タップでQR読み取りモーダルを開きます</div>
+      <div>・Nタグ（平文フル）: <code>N E/650 C/85.0 P/22.5 F/18.0 S/2.3</code></div>
+      <div>・Nタグ（単項目更新）: <code>N S/1.8</code> / <code>N E/540</code></div>
+      <div>・Aタグ: <code>A</code> + <code>HEX2</code></div>
+      <div>・Dタグ: <code>D</code> + <code>HEX2</code></div>
+      <div>・単項目Nタグは「最後にNタグを入力した行」を更新します</div>
+      <div>・Dタグは「現在行 → 最後にNタグを入力した行」の順で適用します</div>
+    </div>
+
+    <div id="status" class="status ok">準備完了</div>
+  </div>
+
+  <div class="license">
+    このQR版は、スマホ・タブレットでのQR入力を前提とした初版です。
+  </div>
+</div>
+
+<!-- 合計モーダル -->
+<div id="sumBackdrop" class="modal-backdrop" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="sumTitle">
+    <header id="sumTitle">合計表示</header>
+    <div class="content">
+      <div class="modal-sub" id="sumSub">基準：—</div>
+      <canvas id="sumChart" width="760" height="240" style="width:100%;height:240px;display:block;margin:10px 0 6px;"></canvas>
+      <ul id="sumList"></ul>
+    </div>
+    <footer>
+      <button id="copyBtn" class="btn">コピー</button>
+      <button id="closeSumModal" class="btn primary">閉じる</button>
+    </footer>
+  </div>
+</div>
+
+<!-- Dタグ説明モーダル -->
+<div id="dtagBackdrop" class="modal-backdrop" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="dtagTitle">
+    <header id="dtagTitle">Dタグ一覧（食器 / 盛り）</header>
+    <div class="content">
+      <div class="modal-sub">Dタグ = 上位5bit: 食器コード / 下位3bit: 盛りコード</div>
+
+      <h3>食器コード</h3>
+      <ul>
+        <li>0: 変更なし（現在の食器を維持）</li>
+        <li>1: 平皿（×1.0）</li>
+        <li>2: 小皿（×0.4）</li>
+        <li>3: 深皿（×1.2）</li>
+        <li>4: 茶碗（×1.0）</li>
+        <li>5: 丼（×1.2）</li>
+        <li>6: 鉢（×0.6）</li>
+        <li>7: タンブラー（×0.7）</li>
+        <li>8: ボトル（×1.5）</li>
+      </ul>
+
+      <h3>盛りコード</h3>
+      <ul>
+        <li>1: 小（×0.6）</li>
+        <li>2: 普通（×1.0）</li>
+        <li>3: 大（×1.6）</li>
+        <li>4: 特盛（×2.0）</li>
+      </ul>
+    </div>
+    <footer>
+      <button id="closeDTagModal" class="btn primary">閉じる</button>
+    </footer>
+  </div>
+</div>
+
+<!-- QRスキャナモーダル -->
+<div id="qrBackdrop" class="modal-backdrop" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="qrTitle">
+    <header id="qrTitle">QRコードを読み取る</header>
+    <div class="content">
+      <div class="qr-panel">
+        <div class="modal-sub" id="qrSub">カメラを起動しています…</div>
+        <video id="qrVideo" autoplay muted playsinline></video>
+
+        <div class="manual-area">
+          <h3>手入力 / 貼り付け</h3>
+          <div class="modal-sub">
+            QR読取に対応していない端末や、カメラが使えない場合はこちらを使ってください。
+          </div>
+          <textarea id="manualPayload" class="manual-text" placeholder="例: N E/650 C/85 P/22.5 F/18 S/2.3"></textarea>
+          <div class="buttons" style="margin-top:10px;">
+            <button id="applyManualBtn" class="btn primary">この内容を反映</button>
+            <button id="clearManualBtn" class="btn">入力を消す</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <button id="closeQrModal" class="btn primary">閉じる</button>
+    </footer>
+  </div>
+</div>
+
+<script>
+(() => {
+  window.addEventListener('error', (e) => {
+    const msg = e?.message || 'Unknown error';
+    const where = e?.filename ? `${e.filename}:${e.lineno}` : '';
+    setStatus(`JSエラー: ${msg} ${where}`, false);
+  });
+
+  const NUTRI_COLORS = {
+    E: '#0000FF',
+    C: '#00BFFF',
+    P: '#006400',
+    F: '#DAA520',
+    S: '#FF6347'
+  };
+
+  const REFERENCE_MEAL = {
+    male:{
+      A0607:{ lv1:{E:540,C:77.6,P:22.2,F:15,S:1.8}, lv2:{E:620,C:89.1,P:25.5,F:17.2,S:1.8}, lv3:{E:700,C:100.6,P:28.8,F:19.4,S:1.8} },
+      A0809:{ lv1:{E:640,C:92,P:26.4,F:17.7,S:2}, lv2:{E:740,C:106.3,P:30.5,F:20.5,S:2}, lv3:{E:840,C:120.7,P:34.6,F:23.3,S:2} },
+      A1011:{ lv1:{E:780,C:112.1,P:32.1,F:21.6,S:2.4}, lv2:{E:900,C:129.3,P:37.1,F:25,S:2.4}, lv3:{E:1000,C:143.7,P:41.2,F:27.7,S:2.4} },
+      A1214:{ lv1:{E:920,C:132.2,P:37.9,F:25.5,S:2.8}, lv2:{E:1040,C:149.5,P:42.9,F:28.8,S:2.8}, lv3:{E:1160,C:166.7,P:47.8,F:32.2,S:2.8} },
+      A1517:{ lv1:{E:1000,C:143.7,P:41.2,F:27.7,S:3}, lv2:{E:1140,C:163.8,P:47,F:31.6,S:3}, lv3:{E:1260,C:181.1,P:51.9,F:35,S:3} },
+      A1829:{ lv1:{E:900,C:129.3,P:37.1,F:25,S:3}, lv2:{E:1040,C:149.5,P:42.9,F:28.8,S:3}, lv3:{E:1200,C:172.5,P:49.5,F:33.3,S:3} },
+      A3049:{ lv1:{E:940,C:135.1,P:38.7,F:26.1,S:3}, lv2:{E:1100,C:158.1,P:45.3,F:30.5,S:3}, lv3:{E:1260,C:181.1,P:51.9,F:35,S:3} },
+      A5069:{ lv1:{E:900,C:129.3,P:38.2,F:25,S:3}, lv2:{E:1060,C:152.3,P:45,F:29.4,S:3}, lv3:{E:1200,C:172.5,P:51,F:33.3,S:3} },
+      A6574:{ lv1:{E:840,C:120.7,P:36.7,F:23.3,S:3}, lv2:{E:940,C:135.1,P:41.1,F:26.1,S:3}, lv3:{E:1060,C:152.3,P:46.3,F:29.4,S:3} },
+      A7500:{ lv1:{E:740,C:106.3,P:32.3,F:20.5,S:3}, lv2:{E:900,C:129.3,P:39.3,F:25,S:3}, lv3:{E:1060,C:152.3,P:46.3,F:29.4,S:3} },
+    },
+    female:{
+      A0607:{ lv1:{E:500,C:71.8,P:20.6,F:13.8,S:1.8}, lv2:{E:580,C:83.3,P:23.9,F:16.1,S:1.8}, lv3:{E:660,C:94.8,P:27.2,F:18.3,S:1.8} },
+      A0809:{ lv1:{E:600,C:86.2,P:24.7,F:16.6,S:2}, lv2:{E:680,C:97.7,P:28,F:18.8,S:2}, lv3:{E:760,C:109.2,P:31.3,F:21.1,S:2} },
+      A1011:{ lv1:{E:740,C:106.3,P:30.5,F:20.5,S:2.4}, lv2:{E:884,C:127,P:36.4,F:24.5,S:2.4}, lv3:{E:940,C:135.1,P:38.7,F:26.1,S:2.4} },
+      A1214:{ lv1:{E:860,C:123.6,P:35.4,F:23.8,S:2.6}, lv2:{E:960,C:138,P:39.6,F:26.6,S:2.6}, lv3:{E:1080,C:155.2,P:44.5,F:30,S:2.6} },
+      A1517:{ lv1:{E:820,C:117.8,P:33.8,F:22.7,S:2.6}, lv2:{E:920,C:132.2,P:37.9,F:25.5,S:2.6}, lv3:{E:1020,C:146.6,P:42,F:28.3,S:2.6} },
+      A1829:{ lv1:{E:680,C:97.7,P:28,F:18.8,S:2.6}, lv2:{E:780,C:112.1,P:32.1,F:21.6,S:2.6}, lv3:{E:900,C:129.3,P:37.1,F:25,S:2.6} },
+      A3049:{ lv1:{E:700,C:100.6,P:28.8,F:19.4,S:2.6}, lv2:{E:820,C:117.8,P:33.8,F:22.7,S:2.6}, lv3:{E:940,C:135.1,P:38.7,F:26.1,S:2.6} },
+      A5069:{ lv1:{E:680,C:97.7,P:28.9,F:18.8,S:2.6}, lv2:{E:780,C:112.1,P:33.1,F:21.6,S:2.6}, lv3:{E:900,C:129.3,P:38.2,F:25,S:2.6} },
+      A6574:{ lv1:{E:660,C:94.8,P:28.8,F:18.3,S:2.6}, lv2:{E:740,C:106.3,P:32.3,F:20.5,S:2.6}, lv3:{E:820,C:117.8,P:35.8,F:22.7,S:2.6} },
+      A7500:{ lv1:{E:580,C:83.3,P:25.3,F:16.1,S:2.6}, lv2:{E:700,C:100.6,P:30.6,F:19.4,S:2.6}, lv3:{E:820,C:117.8,P:35.8,F:22.7,S:2.6} }
+    }
+  };
+
+  const dishTable = {
+    0: { name: '変更なし', factor: 1.0 },
+    1: { name: '平皿', factor: 1.0 },
+    2: { name: '小皿', factor: 0.4 },
+    3: { name: '深皿', factor: 1.2 },
+    4: { name: '茶碗', factor: 1.0 },
+    5: { name: '丼', factor: 1.2 },
+    6: { name: '鉢', factor: 0.6 },
+    7: { name: 'タンブラー', factor: 0.7 },
+    8: { name: 'ボトル', factor: 1.5 }
+  };
+
+  const sizeTable = {
+    1: { name: '小', factor: 0.6 },
+    2: { name: '普通', factor: 1.0 },
+    3: { name: '大', factor: 1.6 },
+    4: { name: '特盛', factor: 2.0 }
+  };
+
+  const AGE4_TO_AGESEL = {
+    0x1: 'A0607',
+    0x2: 'A0809',
+    0x3: 'A1011',
+    0x4: 'A1214',
+    0x5: 'A1517',
+    0x6: 'A1829',
+    0x7: 'A3049',
+    0x8: 'A5069',
+    0x9: 'A6574',
+    0xA: 'A7500'
+  };
+
+  const ROWS = 10;
+  const DATA_COLS = 6;
+
+  const sexSel = document.getElementById('sexSel');
+  const ageSel = document.getElementById('ageSel');
+  const actSel = document.getElementById('actSel');
+  const refHint = document.getElementById('refHint');
+  const statusEl = document.getElementById('status');
+  const tbody = document.getElementById('tbody');
+
+  const sumBackdrop = document.getElementById('sumBackdrop');
+  const sumSub = document.getElementById('sumSub');
+  const sumList = document.getElementById('sumList');
+  const sumChart = document.getElementById('sumChart');
+
+  const dtagBackdrop = document.getElementById('dtagBackdrop');
+
+  const qrBackdrop = document.getElementById('qrBackdrop');
+  const qrVideo = document.getElementById('qrVideo');
+  const qrSub = document.getElementById('qrSub');
+  const manualPayload = document.getElementById('manualPayload');
+
+  const rowState = Array.from({length: ROWS}, () => ({
+    hasBase: false,
+    base: { E: 0, C10: 0, P10: 0, F10: 0, S10: 0 },
+    dishCode: 1,
+    sizeCode: 2
+  }));
+
+  let lastMenuRow = -1;
+  let scanRow = 0;
+  let qrStream = null;
+  let qrDetector = null;
+  let qrLoopHandle = null;
+  let lastFocused = null;
+
+  function setStatus(msg, ok = true) {
+    statusEl.textContent = msg;
+    statusEl.className = 'status ' + (ok ? 'ok' : 'ng');
+  }
+
+  function format1(n) {
+    return (Math.round(n * 10) / 10).toString();
+  }
+
+  function formatPct(p) {
+    return (Math.round(p * 10) / 10).toString() + '%';
+  }
+
+  function decodeDishCode(code) {
+    return dishTable[code] || { name: `未定義(${code})`, factor: 1.0 };
+  }
+
+  function decodeSizeCode(code) {
+    return sizeTable[code] || { name: `未定義(${code})`, factor: 1.0 };
+  }
+
+  function formatMetaLabel(dishCode, sizeCode) {
+    const dish = decodeDishCode(dishCode);
+    const size = decodeSizeCode(sizeCode);
+    return `${dish.name}(×${dish.factor}) / ${size.name}(×${size.factor}) / 合計×${(dish.factor * size.factor).toFixed(2)}`;
+  }
+
+  function getReference() {
+    const sex = sexSel.value;
+    const ageKey = ageSel.value;
+    const act = actSel.value;
+    return REFERENCE_MEAL?.[sex]?.[ageKey]?.[act] || REFERENCE_MEAL?.[sex]?.[ageKey]?.lv2 || null;
+  }
+
+  function updateReferenceHint() {
+    const ref = getReference();
+    if (!ref) {
+      refHint.textContent = '基準：未設定';
+      return;
+    }
+    refHint.textContent = `E ${ref.E}kcal / C ${ref.C}g / P ${ref.P}g / F ${ref.F}g / S ${ref.S}g`;
+  }
+
+  function setCell(r, c, v) {
+    const inp = document.querySelector(`input[data-row="${r}"][data-col="${c}"]`);
+    if (inp) inp.value = v;
+  }
+
+  function focusFirstCellOfRow(r) {
+    const first = document.querySelector(`input[data-row="${r}"][data-col="0"]`);
+    if (first) first.focus();
+  }
+
+  function applyFactorsAndRenderRow(r) {
+    const st = rowState[r];
+    if (!st.hasBase) return;
+
+    const dish = decodeDishCode(st.dishCode);
+    const size = decodeSizeCode(st.sizeCode);
+    const k = dish.factor * size.factor;
+
+    const E = Math.round(st.base.E * k);
+    const C = Math.round(st.base.C10 * k) / 10;
+    const P = Math.round(st.base.P10 * k) / 10;
+    const F = Math.round(st.base.F10 * k) / 10;
+    const S = Math.round(st.base.S10 * k) / 10;
+
+    setCell(r, 0, String(E));
+    setCell(r, 1, C.toFixed(1));
+    setCell(r, 2, P.toFixed(1));
+    setCell(r, 3, F.toFixed(1));
+    setCell(r, 4, S.toFixed(1));
+    setCell(r, 5, formatMetaLabel(st.dishCode, st.sizeCode));
+  }
+
+  function clearRow(r) {
+    for (let c = 0; c < DATA_COLS; c++) setCell(r, c, '');
+    rowState[r] = {
+      hasBase: false,
+      base: { E: 0, C10: 0, P10: 0, F10: 0, S10: 0 },
+      dishCode: 1,
+      sizeCode: 2
+    };
+    if (lastMenuRow === r) {
+      lastMenuRow = findLastMenuRow();
+    }
+  }
+
+  function findLastMenuRow() {
+    for (let i = ROWS - 1; i >= 0; i--) {
+      if (rowState[i].hasBase) return i;
+    }
+    return -1;
+  }
+
+  function clearAll() {
+    tbody.querySelectorAll('input').forEach(inp => inp.value = '');
+    for (let r = 0; r < ROWS; r++) {
+      rowState[r] = {
+        hasBase: false,
+        base: { E: 0, C10: 0, P10: 0, F10: 0, S10: 0 },
+        dishCode: 1,
+        sizeCode: 2
+      };
+    }
+    lastMenuRow = -1;
+    focusFirstCellOfRow(0);
+    setStatus('全てクリアしました', true);
+  }
+
+  function makeCellInput(r, c) {
+    const inp = document.createElement('input');
+    inp.type = 'text';
+    inp.readOnly = true;
+    inp.className = 'scan-input' + (c === 5 ? ' meta' : '');
+    inp.placeholder = c === 5 ? 'ここをタップして読取' : 'タップして読取';
+    inp.dataset.row = r;
+    inp.dataset.col = c;
+
+    inp.addEventListener('click', () => {
+      scanRow = r;
+      openQrModal(r, c);
+    });
+
+    inp.addEventListener('focus', () => {
+      scanRow = r;
+    });
+
+    return inp;
+  }
+
+  for (let r = 0; r < ROWS; r++) {
+    const tr = document.createElement('tr');
+
+    for (let c = 0; c < DATA_COLS; c++) {
+      const td = document.createElement('td');
+      td.classList.add(['colE','colC','colP','colF','colS','colT'][c]);
+      td.appendChild(makeCellInput(r, c));
+      tr.appendChild(td);
+    }
+
+    const tdAction = document.createElement('td');
+    tdAction.className = 'row-actions';
+    const btn = document.createElement('button');
+    btn.className = 'btn';
+    btn.textContent = 'クリア';
+    btn.addEventListener('click', () => clearRow(r));
+    tdAction.appendChild(btn);
+    tr.appendChild(tdAction);
+
+    tbody.appendChild(tr);
+  }
+
+  function tryParseAttrOnly(text) {
+    const t = (text || '').trim();
+    const m = t.match(/^[Aa]([0-9A-Fa-f]{2})$/);
+    if (!m) return null;
+
+    const v = parseInt(m[1], 16);
+    const sex2 = (v >> 6) & 0b11;
+    const age4 = (v >> 2) & 0b1111;
+    const act2 = v & 0b11;
+
+    let sex = 'female', sexLabel = '女';
+    if (sex2 === 0b10) { sex = 'male'; sexLabel = '男'; }
+    else if (sex2 === 0b01) { sex = 'female'; sexLabel = '女'; }
+    else if (sex2 === 0b11) { sex = 'female'; sexLabel = '回答しない（女扱い）'; }
+    else { sex = 'female'; sexLabel = '未設定（女扱い）'; }
+
+    const ageSelVal = AGE4_TO_AGESEL[age4] || 'A1829';
+
+    let act = 'lv2', actLabel = 'Lv2';
+    if (act2 === 0b01) { act = 'lv1'; actLabel = 'Lv1'; }
+    else if (act2 === 0b10) { act = 'lv2'; actLabel = 'Lv2'; }
+    else if (act2 === 0b11) { act = 'lv3'; actLabel = 'Lv3'; }
+    else { act = 'lv2'; actLabel = '未設定（Lv2扱い）'; }
+
+    return { sex, sexLabel, ageSelVal, act, actLabel };
+  }
+
+  function tryParseDTag(text) {
+    const t = (text || '').trim();
+    const m = t.match(/^[Dd]([0-9A-Fa-f]{2})$/);
+    if (!m) return null;
+
+    const v = parseInt(m[1], 16);
+    const dishCode = (v >> 3) & 0x1F;
+    const sizeCode = v & 0x07;
+
+    const dish = decodeDishCode(dishCode);
+    const size = decodeSizeCode(sizeCode);
+
+    return {
+      dishCode, sizeCode,
+      dishName: dish.name,
+      sizeName: size.name,
+      dishFactor: dish.factor,
+      sizeFactor: size.factor
+    };
+  }
+
+  function parseNPlainTokens(text) {
+    const t = (text || '').trim();
+
+    if (!/^[Nn]\b/.test(t)) return null;
+
+    const rest = t.replace(/^[Nn]\s*/, '').trim();
+    if (!rest) return null;
+
+    const matches = [...rest.matchAll(/\b([ECPFS])\s*\/\s*(-?\d+(?:\.\d+)?)\b/gi)];
+    if (!matches.length) return null;
+
+    const map = {};
+    for (const m of matches) {
+      const key = m[1].toUpperCase();
+      const value = Number(m[2]);
+      if (!Number.isFinite(value)) return null;
+      map[key] = value;
+    }
+
+    const covered = matches.map(m => m[0]).join(' ');
+    const normalizedRest = rest.replace(/\s+/g, ' ').trim();
+    const normalizedCovered = covered.replace(/\s+/g, ' ').trim();
+
+    if (normalizedCovered.length === 0) return null;
+
+    const fullKeys = ['E', 'C', 'P', 'F', 'S'];
+    const present = fullKeys.filter(k => Object.hasOwn(map, k));
+
+    if (present.length === 5) return { mode: 'full', values: map };
+    if (present.length === 1) return { mode: 'patch', values: map };
+
+    return { mode: 'invalid', values: map };
+  }
+
+  function commitPlainNFull(targetRow, values) {
+    const st = rowState[targetRow];
+    st.hasBase = true;
+    st.base = {
+      E: Math.round(values.E),
+      C10: Math.round(values.C * 10),
+      P10: Math.round(values.P * 10),
+      F10: Math.round(values.F * 10),
+      S10: Math.round(values.S * 10)
+    };
+    st.dishCode = 1;
+    st.sizeCode = 2;
+    applyFactorsAndRenderRow(targetRow);
+    lastMenuRow = targetRow;
+    setStatus(`OK：行${targetRow + 1}にNタグを反映しました`, true);
+    scanRow = Math.min(targetRow + 1, ROWS - 1);
+    focusFirstCellOfRow(scanRow);
+  }
+
+  function commitPlainNPatch(values) {
+    if (lastMenuRow < 0 || !rowState[lastMenuRow]?.hasBase) {
+      setStatus('NG：単項目Nタグの更新先がありません（先にフルNタグを読んでください）', false);
+      return;
+    }
+
+    const st = rowState[lastMenuRow];
+    if (Object.hasOwn(values, 'E')) st.base.E = Math.round(values.E);
+    if (Object.hasOwn(values, 'C')) st.base.C10 = Math.round(values.C * 10);
+    if (Object.hasOwn(values, 'P')) st.base.P10 = Math.round(values.P * 10);
+    if (Object.hasOwn(values, 'F')) st.base.F10 = Math.round(values.F * 10);
+    if (Object.hasOwn(values, 'S')) st.base.S10 = Math.round(values.S * 10);
+
+    applyFactorsAndRenderRow(lastMenuRow);
+    const key = Object.keys(values)[0];
+    setStatus(`OK：行${lastMenuRow + 1}の${key}を更新しました`, true);
+  }
+
+  function getTargetRowForD(currentRow) {
+    if (rowState[currentRow]?.hasBase) return currentRow;
+    if (lastMenuRow >= 0 && rowState[lastMenuRow]?.hasBase) return lastMenuRow;
+    return currentRow;
+  }
+
+  function commitPayload(payload) {
+    const attr = tryParseAttrOnly(payload);
+    if (attr) {
+      sexSel.value = attr.sex;
+      ageSel.value = attr.ageSelVal;
+      actSel.value = attr.act;
+      updateReferenceHint();
+      setStatus(`OK：属性反映（${attr.sexLabel} / ${attr.ageSelVal} / ${attr.actLabel}）`, true);
+      return;
+    }
+
+    const nplain = parseNPlainTokens(payload);
+    if (nplain) {
+      if (nplain.mode === 'full') {
+        commitPlainNFull(scanRow, nplain.values);
+        return;
+      }
+      if (nplain.mode === 'patch') {
+        commitPlainNPatch(nplain.values);
+        return;
+      }
+      setStatus('NG：Nタグは5項目全部、または1項目だけ指定してください', false);
+      return;
+    }
+
+    const dtag = tryParseDTag(payload);
+    if (dtag) {
+      const target = getTargetRowForD(scanRow);
+      if (target < 0 || target >= ROWS || !rowState[target]?.hasBase) {
+        setStatus('NG：Dタグの適用先がありません（先にNタグを読んでください）', false);
+        return;
+      }
+
+      if (dtag.dishCode !== 0) {
+        rowState[target].dishCode = dtag.dishCode;
+      }
+      rowState[target].sizeCode = dtag.sizeCode;
+
+      applyFactorsAndRenderRow(target);
+      const dish = decodeDishCode(rowState[target].dishCode);
+      const size = decodeSizeCode(rowState[target].sizeCode);
+      setStatus(`OK：行${target + 1}を再計算（${dish.name} / ${size.name}）`, true);
+      return;
+    }
+
+    setStatus('NG：形式不一致です（N平文 / A+HEX2 / D+HEX2）', false);
+  }
+
+  function calcColumnSums() {
+    const sums = Array(DATA_COLS).fill(0);
+    for (let c = 0; c < DATA_COLS; c++) {
+      if (c === 5) {
+        sums[c] = NaN;
+        continue;
+      }
+      for (let r = 0; r < ROWS; r++) {
+        const inp = document.querySelector(`input[data-row="${r}"][data-col="${c}"]`);
+        const v = parseFloat((inp.value || '').replace(/,/g, ''));
+        sums[c] += Number.isFinite(v) ? v : 0;
+      }
+    }
+    return sums;
+  }
+
+  function drawPercentBarChart(canvas, labels, percents) {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const cssW = canvas.clientWidth || 760;
+    const cssH = parseInt(getComputedStyle(canvas).height, 10) || 240;
+    const dpr = window.devicePixelRatio || 1;
+
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const W = cssW, H = cssH;
+    ctx.clearRect(0, 0, W, H);
+
+    const padL = 48, padR = 12, padT = 10, padB = 34;
+    const innerW = W - padL - padR;
+    const innerH = H - padT - padB;
+    const maxP = 200;
+
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(0,0,0,.22)';
+    ctx.beginPath();
+    ctx.moveTo(padL, padT);
+    ctx.lineTo(padL, padT + innerH);
+    ctx.lineTo(padL + innerW, padT + innerH);
+    ctx.stroke();
+
+    ctx.font = '12px system-ui, sans-serif';
+    ctx.fillStyle = 'rgba(0,0,0,.65)';
+
+    const ticks = [0, 50, 100, 150, 200];
+    for (const t of ticks) {
+      const y = padT + innerH - (innerH * (t / maxP));
+      ctx.strokeStyle = 'rgba(0,0,0,.08)';
+      ctx.beginPath();
+      ctx.moveTo(padL, y);
+      ctx.lineTo(padL + innerW, y);
+      ctx.stroke();
+      ctx.fillText(String(t), 6, y + 4);
+    }
+
+    const y100 = padT + innerH - innerH * (100 / maxP);
+    ctx.strokeStyle = 'rgba(0,0,0,.58)';
+    ctx.beginPath();
+    ctx.moveTo(padL, y100);
+    ctx.lineTo(padL + innerW, y100);
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(0,0,0,.78)';
+    ctx.fillText('昼食基準', padL + innerW - 64, y100 - 4);
+
+    const y75 = padT + innerH - innerH * (75 / maxP);
+    ctx.strokeStyle = 'rgba(0,0,0,.32)';
+    ctx.beginPath();
+    ctx.moveTo(padL, y75);
+    ctx.lineTo(padL + innerW, y75);
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(0,0,0,.72)';
+    ctx.fillText('朝・夕食基準', padL + innerW - 90, y75 - 4);
+
+    const gap = 10;
+    const barW = (innerW - gap * (labels.length - 1)) / labels.length;
+    const keys = ['E','C','P','F','S'];
+
+    for (let i = 0; i < labels.length; i++) {
+      const p = Number.isFinite(percents[i]) ? percents[i] : 0;
+      const pc = Math.max(0, Math.min(maxP, p));
+      const h = innerH * (pc / maxP);
+      const x = padL + i * (barW + gap);
+      const y = padT + innerH - h;
+
+      ctx.fillStyle = NUTRI_COLORS[keys[i]];
+      ctx.fillRect(x, y, barW, h);
+
+      ctx.fillStyle = NUTRI_COLORS[keys[i]];
+      ctx.fillText(formatPct(p), x, y - 4);
+
+      ctx.fillStyle = 'rgba(0,0,0,.84)';
+      ctx.fillText(labels[i], x, padT + innerH + 18);
+    }
+  }
+
+  function openSumModal() {
+    const sums = calcColumnSums();
+    const ref = getReference();
+
+    if (ref) {
+      sumSub.textContent = `基準: E ${ref.E}kcal / C ${ref.C}g / P ${ref.P}g / F ${ref.F}g / S ${ref.S}g`;
+    } else {
+      sumSub.textContent = '基準：未設定';
+    }
+
+    const abs = { E:sums[0], C:sums[1], P:sums[2], F:sums[3], S:sums[4] };
+    const pct = {
+      E: ref?.E ? abs.E / ref.E * 100 : 0,
+      C: ref?.C ? abs.C / ref.C * 100 : 0,
+      P: ref?.P ? abs.P / ref.P * 100 : 0,
+      F: ref?.F ? abs.F / ref.F * 100 : 0,
+      S: ref?.S ? abs.S / ref.S * 100 : 0
+    };
+
+    sumList.innerHTML = '';
+    const items = [
+      { key:'E', text:`エネルギー: ${format1(abs.E)} kcal / 基準 ${ref ? ref.E : '—'} / ${formatPct(pct.E)}` },
+      { key:'C', text:`炭水化物: ${format1(abs.C)} g / 基準 ${ref ? ref.C : '—'} / ${formatPct(pct.C)}` },
+      { key:'P', text:`タンパク質: ${format1(abs.P)} g / 基準 ${ref ? ref.P : '—'} / ${formatPct(pct.P)}` },
+      { key:'F', text:`脂質: ${format1(abs.F)} g / 基準 ${ref ? ref.F : '—'} / ${formatPct(pct.F)}` },
+      { key:'S', text:`塩分: ${format1(abs.S)} g / 基準 ${ref ? ref.S : '—'} / ${formatPct(pct.S)}` }
+    ];
+
+    for (const it of items) {
+      const li = document.createElement('li');
+      li.textContent = it.text;
+      li.style.color = NUTRI_COLORS[it.key];
+      sumList.appendChild(li);
+    }
+
+    drawPercentBarChart(
+      sumChart,
+      ['エネルギー', '炭水化物', 'タンパク質', '脂質', '塩分'],
+      [pct.E, pct.C, pct.P, pct.F, pct.S]
+    );
+
+    sumBackdrop.classList.add('show');
+    sumBackdrop.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeSumModal() {
+    sumBackdrop.classList.remove('show');
+    sumBackdrop.setAttribute('aria-hidden', 'true');
+  }
+
+  function openDTagModal() {
+    dtagBackdrop.classList.add('show');
+    dtagBackdrop.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeDTagModal() {
+    dtagBackdrop.classList.remove('show');
+    dtagBackdrop.setAttribute('aria-hidden', 'true');
+  }
+
+  async function isQrAvailable() {
+    if (!('BarcodeDetector' in window)) return false;
+    try {
+      const formats = await BarcodeDetector.getSupportedFormats();
+      return formats.includes('qr_code');
+    } catch {
+      return false;
+    }
+  }
+
+  async function startQrScanner() {
+  qrSub.textContent = 'カメラを起動しています…';
+
+  if (!window.isSecureContext) {
+    qrSub.textContent = 'このページは安全でない開き方です。iPhone / iPad では HTTPS で開いてください。';
+    return false;
+  }
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    qrSub.textContent = 'この端末ではカメラAPIが使えません。下の手入力欄を使ってください。';
+    return false;
+  }
+
+  try {
+    qrStream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: { ideal: 'environment' }
+      },
+      audio: false
+    });
+
+    qrVideo.srcObject = qrStream;
+    await qrVideo.play();
+
+    qrSub.textContent = 'カメラは起動しました。QR認識を開始します…';
+
+    // ここで BarcodeDetector ではなく別ライブラリで解析する
+    startQrDecodeLoop();
+    return true;
+  } catch (err) {
+    const msg = err?.name ? `${err.name}: ${err.message}` : 'カメラ起動に失敗しました';
+    qrSub.textContent = `カメラを使えません。${msg}`;
+    setStatus(`NG：${msg}`, false);
+    return false;
+  }
+}
+let qrScanTimer = null;
+
+function startQrDecodeLoop() {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+
+  async function loop() {
+    if (!qrVideo.videoWidth || !qrVideo.videoHeight) {
+      qrScanTimer = requestAnimationFrame(loop);
+      return;
+    }
+
+    canvas.width = qrVideo.videoWidth;
+    canvas.height = qrVideo.videoHeight;
+    ctx.drawImage(qrVideo, 0, 0, canvas.width, canvas.height);
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+    if (code && code.data) {
+      stopQrScanner();
+      handleQrPayload(code.data);
+      return;
+    }
+
+    qrScanTimer = requestAnimationFrame(loop);
+  }
+
+  qrScanTimer = requestAnimationFrame(loop);
+}
+
+function stopQrScanner() {
+  if (qrScanTimer) {
+    cancelAnimationFrame(qrScanTimer);
+    qrScanTimer = null;
+  }
+  if (qrStream) {
+    qrStream.getTracks().forEach(track => track.stop());
+    qrStream = null;
+  }
+  qrVideo.srcObject = null;
+}
+  async function scanLoop() {
+    if (!qrBackdrop.classList.contains('show')) return;
+
+    try {
+      if (qrVideo.readyState >= 2 && qrDetector) {
+        const codes = await qrDetector.detect(qrVideo);
+        if (codes && codes.length > 0) {
+          const raw = (codes[0].rawValue || '').trim();
+          if (raw) {
+            stopQrScanner();
+            closeQrModal();
+            commitPayload(raw);
+            return;
+          }
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+
+    qrLoopHandle = requestAnimationFrame(scanLoop);
+  }
+
+  function stopQrScanner() {
+    if (qrLoopHandle) {
+      cancelAnimationFrame(qrLoopHandle);
+      qrLoopHandle = null;
+    }
+
+    if (qrStream) {
+      qrStream.getTracks().forEach(track => track.stop());
+      qrStream = null;
+    }
+
+    qrVideo.srcObject = null;
+    qrDetector = null;
+  }
+
+  async function openQrModal(row, col) {
+    scanRow = row;
+    lastFocused = document.querySelector(`input[data-row="${row}"][data-col="${col}"]`);
+    manualPayload.value = '';
+    qrBackdrop.classList.add('show');
+    qrBackdrop.setAttribute('aria-hidden', 'false');
+    await startQrScanner();
+  }
+
+  function closeQrModal() {
+    stopQrScanner();
+    qrBackdrop.classList.remove('show');
+    qrBackdrop.setAttribute('aria-hidden', 'true');
+    if (lastFocused && typeof lastFocused.focus === 'function') {
+      lastFocused.focus();
+    }
+  }
+
+  sexSel.addEventListener('change', updateReferenceHint);
+  ageSel.addEventListener('change', updateReferenceHint);
+  actSel.addEventListener('change', updateReferenceHint);
+
+  document.getElementById('clearAll').addEventListener('click', clearAll);
+  document.getElementById('sumColumns').addEventListener('click', openSumModal);
+  document.getElementById('closeSumModal').addEventListener('click', closeSumModal);
+
+  document.getElementById('copyBtn').addEventListener('click', async () => {
+    const text = Array.from(sumList.querySelectorAll('li')).map(li => li.textContent).join('\n');
+    try {
+      await navigator.clipboard.writeText(text);
+      setStatus('合計内容をコピーしました', true);
+    } catch {
+      setStatus('NG：コピーに失敗しました', false);
+    }
+  });
+
+  document.getElementById('openDTagHelp').addEventListener('click', openDTagModal);
+  document.getElementById('closeDTagModal').addEventListener('click', closeDTagModal);
+
+  document.getElementById('closeQrModal').addEventListener('click', closeQrModal);
+  document.getElementById('clearManualBtn').addEventListener('click', () => {
+    manualPayload.value = '';
+    manualPayload.focus();
+  });
+
+  document.getElementById('applyManualBtn').addEventListener('click', () => {
+    const text = (manualPayload.value || '').trim();
+    if (!text) {
+      setStatus('NG：手入力欄が空です', false);
+      return;
+    }
+    closeQrModal();
+    commitPayload(text);
+  });
+
+  sumBackdrop.addEventListener('click', (e) => {
+    if (e.target === sumBackdrop) closeSumModal();
+  });
+
+  dtagBackdrop.addEventListener('click', (e) => {
+    if (e.target === dtagBackdrop) closeDTagModal();
+  });
+
+  qrBackdrop.addEventListener('click', (e) => {
+    if (e.target === qrBackdrop) closeQrModal();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (qrBackdrop.classList.contains('show')) closeQrModal();
+      else if (sumBackdrop.classList.contains('show')) closeSumModal();
+      else if (dtagBackdrop.classList.contains('show')) closeDTagModal();
+    }
+  });
+
+  updateReferenceHint();
+  focusFirstCellOfRow(0);
+  setStatus('準備完了', true);
+})();
+</script>
+</body>
+</html>
