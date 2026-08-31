@@ -18,6 +18,7 @@
 - NuCalc\*\*\*.html ファイルを Webブラウザを搭載した汎用パーソナルコンピュータに複製し、任意のWebブラウザ（[Apple Safari](https://www.apple.com/jp/safari/switch/), [Microsoft Edge](https://explore.microsoft.com/ja-jp/edge?ep=2187&form=MA14LT&es=375&cs=1673980518), [google Chrome](https://www.google.com/intl/ja_jp/chrome/dr/download/?brand=OZZY&ds_kid=10484928882&gclsrc=aw.ds&gad_source=1&gad_campaignid=20752932842&gbraid=0AAAAAoY3CA4uDoWrj2QgUBOH4WmNodGQ3&gclid=CjwKCAjwzNTUBhAjEiwA7zcvWnN_fyzS9y6PKauFntOoVbX817NOZOi1DPMu3W7HrxZdx-QDIqX2vhoCILgQAvD_BwE) にて動作を確認しています）で起動する
 
 ## 使い方
+### 栄養計算（NuCalc\*\*\*.html)
 - バーコードリーダーをパーソナルコンピュータに接続し、キーボードモード Code128 改行ありに設定する
 - 当該ファイルをWebブラウザで起動
 - 文字入力モードを「半角英数」に設定
@@ -26,6 +27,13 @@
 - 盛り量を調節したい場合は、その行の枠を選択した上で盛り量のバーコードを読む
 - 「合計を表示」を押す
 - 日本人の栄養摂取基準2025を100%として、読み取ったバーコードの合計を数値および棒グラフで表示
+
+### バーコードエンコーダー（NuCalcEncoder\-v\*\*.html)
+- 当該ファイルを Webブラウザを搭載した汎用パーソナルコンピュータに複製し、任意のWebブラウザ（[Apple Safari](https://www.apple.com/jp/safari/switch/), [Microsoft Edge](https://explore.microsoft.com/ja-jp/edge?ep=2187&form=MA14LT&es=375&cs=1673980518), [google Chrome](https://www.google.com/intl/ja_jp/chrome/dr/download/?brand=OZZY&ds_kid=10484928882&gclsrc=aw.ds&gad_source=1&gad_campaignid=20752932842&gbraid=0AAAAAoY3CA4uDoWrj2QgUBOH4WmNodGQ3&gclid=CjwKCAjwzNTUBhAjEiwA7zcvWnN_fyzS9y6PKauFntOoVbX817NOZOi1DPMu3W7HrxZdx-QDIqX2vhoCILgQAvD_BwE) にて動作を確認しています）で起動する
+- 栄養素など必要事項を入力
+- 「**バーコード生成**」ボタンを押す
+- バーコードが生成されたら「**バーコードPNG保存**」を押して，適当な名称をつけて保存する
+- PNGを貼り付けられるアプリケーションに貼り付けて印刷を行う（タテヨコ比を変えるなどするとバーコードリーダーが読めないことがあります）
 
 ## Citation
 本ソフトウェアを研究、教育または学会発表等で利用した場合は、
