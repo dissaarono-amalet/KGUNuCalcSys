@@ -24,7 +24,8 @@
 ## Requirements
 - Google Chrome/FireFox/Safari/Microsoft Edge などの汎用Webブラウザが稼働するパーソナルコンピュータ
 - その他の必要環境
--- Code128 を読むことができる1次元バーコードリーダー
+  -- Code128 を読むことができる1次元バーコードリーダー
+  -- NuCalcQR の場合は外付けQRコードリーダー
 
 ## インストール方法
 - NuCalc\*\*\*.html ファイルを Webブラウザを搭載した汎用パーソナルコンピュータに複製し、任意のWebブラウザ（[Apple Safari](https://www.apple.com/jp/safari/switch/), [Microsoft Edge](https://explore.microsoft.com/ja-jp/edge?ep=2187&form=MA14LT&es=375&cs=1673980518), [google Chrome](https://www.google.com/intl/ja_jp/chrome/dr/download/?brand=OZZY&ds_kid=10484928882&gclsrc=aw.ds&gad_source=1&gad_campaignid=20752932842&gbraid=0AAAAAoY3CA4uDoWrj2QgUBOH4WmNodGQ3&gclid=CjwKCAjwzNTUBhAjEiwA7zcvWnN_fyzS9y6PKauFntOoVbX817NOZOi1DPMu3W7HrxZdx-QDIqX2vhoCILgQAvD_BwE) にて動作を確認しています）で起動する
