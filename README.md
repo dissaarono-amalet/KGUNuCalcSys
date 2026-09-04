@@ -5,17 +5,17 @@
 
 ## Features
 
-- ***NuCalcEncoder.html***
+- **NuCalcEncoder.html**
 -- NuCalc で利用可能なCode128 バーコードをPNGフォーマットで生成します 
-- NuCalc_v\*\*.html
+- **NuCalc_v\*\*.html**
 -- バーコードリーダーとの組み合わせにより栄養計算と結果表示を行います
 -- StageSetCode.pdf によりライフステージと身体活動レベルの設定を行うことができます
 -- ServingCode.pdf により直前に読んだ栄養素コードの栄養素量を 特盛2倍・大盛り1.5倍・小盛り0.5 に変更することができます
-- NuCalcSlider_v\*.html
+- **NuCalcSlider_v\*.html**
 -- バーコードリーダーとの組み合わせにより栄養計算と結果表示を行います
 -- StageSetCode.pdf によりライフステージと身体活動レベルの設定を行うことができます
 -- 食品成分表コード（StandardTableCode.pdf）との組み合わせで献立作成にも応用可能です
-- NuCalcQR_v\*.html
+- **NuCalcQR_v\*.html**
 -- 栄養素量のコードをQRコードとしたものです
 -- StageSetCode.pdf によりライフステージと身体活動レベルの設定を行うことができます
 -- バーコードリーダー同様にQRコードリーダーを通じて栄養素量を取り込むことが可能です
