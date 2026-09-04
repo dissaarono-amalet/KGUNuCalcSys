@@ -5,7 +5,7 @@
 
 ## Features
 
-- NuCalcEncoder.html
+- ***NuCalcEncoder.html***
 -- NuCalc で利用可能なCode128 バーコードをPNGフォーマットで生成します 
 - NuCalc_v\*\*.html
 -- バーコードリーダーとの組み合わせにより栄養計算と結果表示を行います
