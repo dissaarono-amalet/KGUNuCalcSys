@@ -23,7 +23,7 @@
 
 -- StageSetCode.pdf によりライフステージと身体活動レベルの設定を行うことができます
 
--- 食品成分表コード（StandardTableCode.pdf）との組み合わせで献立作成にも応用可能です
+-- 食品成分表の栄養素量を反映したコード表（StandardTablesCode.pdf）との組み合わせで献立作成にも応用可能です
 
 - **NuCalcQR_v\*.html**
 
