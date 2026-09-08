@@ -8,7 +8,7 @@ type: software
 authors:
   - family-names: "Yura"
     given-names: "Makoto"
-    orcid: "https://researchmap.jp/read0202256"
+    researchmap: "https://researchmap.jp/read0202256"
     affiliation: "Kanazawa-Gakuin Junior Colledge"
 
 version: "1.0.0"
