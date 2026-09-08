@@ -83,7 +83,7 @@ See the LICENSE file for details.
 
 
 ## Author
-Makoto Yura  
+[Yura Makoto](https://www.kanazawa-gu.ac.jp/college/aboutus/teacher/foodnutrition-yura/)
 [Kanazawa Gakuin Junior Colledge]
 
 ## Contact
