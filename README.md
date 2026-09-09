@@ -36,6 +36,7 @@
 - その他の必要環境
   - Code128 を読むことができる1次元バーコードリーダー
   - NuCalcQR の場合は外付けQRコードリーダー(まだテスト途中であり正式バージョンではありません）
+- MITライセンスの遵守
 
 ## インストール方法
 - NuCalc\*\*\*.html ファイルをダウンロードしていただき、Webブラウザを搭載した汎用パーソナルコンピュータに複製し、任意のWebブラウザ（[Apple Safari](https://www.apple.com/jp/safari/switch/), [Microsoft Edge](https://explore.microsoft.com/ja-jp/edge?ep=2187&form=MA14LT&es=375&cs=1673980518), [google Chrome](https://www.google.com/intl/ja_jp/chrome/dr/download/?brand=OZZY&ds_kid=10484928882&gclsrc=aw.ds&gad_source=1&gad_campaignid=20752932842&gbraid=0AAAAAoY3CA4uDoWrj2QgUBOH4WmNodGQ3&gclid=CjwKCAjwzNTUBhAjEiwA7zcvWnN_fyzS9y6PKauFntOoVbX817NOZOi1DPMu3W7HrxZdx-QDIqX2vhoCILgQAvD_BwE),[Mozilla FireFox](https://www.firefox.com/ja/landing/get/?mozcb=y&gclid=17438ff673cd1e1a8058e5692007dbee&gclsrc=3p.ds&utm_campaign=ms_v1_firefox_test_expansion_jp_national-test_jp_desktop_all_search_conversion_brand_cpc_install_adgap&msclkid=17438ff673cd1e1a8058e5692007dbee)  にて動作を確認しています）で起動する
