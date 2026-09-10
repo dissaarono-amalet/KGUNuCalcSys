@@ -48,11 +48,19 @@
 - 当該ファイルをWebブラウザで起動
 - 入力欄をクリックして入力可能な状態に
 - 文字入力モードを「半角英数」に設定
-- 利用者の属性バーコード ***「対象属性の設定コード.pdf」*** を読むか、ドロップダウンメニューで選択する
+- 利用者の属性バーコード ***対象属性の設定コード「StageSetCode.pdf」*** を読むか、ドロップダウンメニューで選択する
 - 栄養素データの入ったバーコードを順に読む
 - 盛り量を調節したい場合は、その行の枠を選択した上で盛り量のバーコードを読む
 - 「合計を表示」を押す
 - 日本人の栄養摂取基準2025を100%として、読み取ったバーコードの合計を数値および棒グラフで表示
+
+#### バーコードリーダーをお持ちでない場合
+> Aタグ（StageSetCode.pdf）・Nタグ（Encoderで出力もしくはSampleCode.pdfなど）のバーコード下の文字列を入力してEnterしても動きます
+- Aタグ：年齢・性別・身体活動レベルの設定ができます
+  - A45・・・・・・・6-7歳 女性 活動レベル1
+  - A5A・・・・・・・18-29歳 女性 活動レベル2 
+- Nタグ：栄養素量の設定ができます
+- Dタグ：大盛り・小盛りなどの設定ができます（ServingCode.pdf）NuCalcSliderでは使用できません
 
 ### バーコードエンコーダー（NuCalcEncoder\-v\*\*.html)
 - 当該ファイルを Webブラウザを搭載した汎用パーソナルコンピュータに複製し、任意のWebブラウザ（[Apple Safari](https://www.apple.com/jp/safari/switch/), [Microsoft Edge](https://explore.microsoft.com/ja-jp/edge?ep=2187&form=MA14LT&es=375&cs=1673980518), [google Chrome](https://www.google.com/intl/ja_jp/chrome/dr/download/?brand=OZZY&ds_kid=10484928882&gclsrc=aw.ds&gad_source=1&gad_campaignid=20752932842&gbraid=0AAAAAoY3CA4uDoWrj2QgUBOH4WmNodGQ3&gclid=CjwKCAjwzNTUBhAjEiwA7zcvWnN_fyzS9y6PKauFntOoVbX817NOZOi1DPMu3W7HrxZdx-QDIqX2vhoCILgQAvD_BwE),[Mozilla FireFox](https://www.firefox.com/ja/landing/get/?mozcb=y&gclid=17438ff673cd1e1a8058e5692007dbee&gclsrc=3p.ds&utm_campaign=ms_v1_firefox_test_expansion_jp_national-test_jp_desktop_all_search_conversion_brand_cpc_install_adgap&msclkid=17438ff673cd1e1a8058e5692007dbee) にて動作を確認しています）で起動する
@@ -62,13 +70,6 @@
 - バーコードが生成されたら「**バーコードPNG保存**」を押して，適当な名称をつけて保存する
 > 入力例から生成されるNタグ：N8DF7A1E15910C0
 - PNGを貼り付けられるアプリケーションに貼り付けて印刷を行う（タテヨコ比を変えるなどするとバーコードリーダーが読めないことがあります）
-#### バーコードリーダーをお持ちでない場合
-> Aタグ（StageSetCode.pdf）・Nタグ（Encoderで出力もしくはSampleCode.pdfなど）のバーコード下の文字列を入力してEnterしても動きます
-- Aタグ：年齢・性別・身体活動レベルの設定ができます
-  - A45・・・・・・・6-7歳 女性 活動レベル1
-  - A5A・・・・・・・18-29歳 女性 活動レベル2 
-- Nタグ：栄養素量の設定ができます
-- Dタグ：大盛り・小盛りなどの設定ができます（ServingCode.pdf）NuCalcSliderでは使用できません
 
 ## Citation
 本ソフトウェアを研究、教育または学会発表等で利用する場合は、
